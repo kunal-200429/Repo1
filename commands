@@ -1,0 +1,107 @@
+Expense Tracker Commands with Explanations
+Here are the key commands you can use in the Expense Tracker project. The project supports both CLI (command-line interface) and REST API modes. All commands assume you're in the expense_tracker/ directory.
+
+Setup Commands
+Install Dependencies
+pip install -r requirements.txt
+Explanation: Installs required packages (typer, flask, pywhatkit). Run this first after cloning or downloading the project.
+CLI Commands (via main.py)
+Run these with python main.py cli <command>. The CLI uses Typer for easy command handling.
+
+View CLI Help
+
+python main.py cli --help
+
+Explanation: Shows all available CLI commands and their options.
+
+Add an Expense
+
+python main.py cli add <amount> <category> [description] [date] [--notify <phone>]
+
+Example: python main.py cli add 50.0 food "Lunch at cafe" --notify +1234567890
+
+Explanation: Adds a new expense. Amount is required (float), category is required (string), description and date are optional. Use --notify to send a WhatsApp message (requires WhatsApp Web logged in).
+
+List Expenses
+
+python main.py cli list [--category <cat>] [--date <date>]
+
+Example: python main.py cli list --category food
+
+Explanation: Lists all expenses, optionally filtered by category or date. Shows ID, amount, category, description, date.
+
+Export Expenses to CSV
+
+python main.py cli export [filename]
+
+Example: python main.py cli export my_expenses.csv
+
+Explanation: Exports all expenses to a CSV file (default: expenses.csv). Useful for analysis in Excel or other tools.
+
+View Expense Summary
+
+python main.py cli summary [--period daily|weekly|monthly]
+
+Example: python main.py cli summary --period weekly
+
+Explanation: Shows total expenses and breakdown by category for the specified period (default: daily).
+
+Add a Category
+
+python main.py cli add-category <name>
+
+Example: python main.py cli add-category transport
+
+Explanation: Adds a new expense category if it doesn't exist.
+
+List Categories
+
+python main.py cli list-categories
+
+Explanation: Lists all available categories.
+
+API Commands (via main.py or api.py)
+Start the API server first: python main.py api or python api.py (runs on http://127.0.0.1:5000).
+
+Start API Server
+
+python main.py api
+
+Explanation: Starts the Flask server for REST API access.
+
+Get All Expenses (GET)
+
+curl http://127.0.0.1:5000/expenses?category=food&date=2023-10-01
+
+Explanation: Retrieves expenses, optionally filtered by category or date. Returns JSON list.
+
+Add an Expense (POST)
+
+curl -X POST http://127.0.0.1:5000/expenses -H "Content-Type: application/json" -d '{"amount": 25.0, "category": "snacks", "description": "Chips", "date": "2023-10-01"}'
+
+Explanation: Adds a new expense via POST request. Sends JSON data and returns the created expense.
+
+Direct Python Commands
+Run CLI Directly
+
+python cli.py <command>
+
+Example: python cli.py add 100.0 transport "Taxi"
+
+Explanation: Runs CLI commands directly without main.py.
+
+Run API Directly
+
+python api.py
+
+Explanation: Starts the Flask API server directly.
+
+WhatsApp-Specific Notes
+For --notify in CLI add command, use international format (e.g., +1234567890).
+WhatsApp Web must be open and logged in on your default browser.
+pywhatkit will open the browser tab automatically and send the message.
+Tips
+Dates are in YYYY-MM-DD format.
+Database (expenses.db) is created automatically on first run.
+Use --help with any CLI command for more details, e.g., python main.py cli add --help.
+For API testing, use tools like Postman or curl as shown.
