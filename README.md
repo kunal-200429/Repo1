@@ -1,5 +1,3 @@
-
-
  Expense Tracker with WhatsApp
 
 Track daily expenses, categories, and budgets with a simple Python service that can send WhatsApp notifications and summaries to your phone. This project supports CLI and REST usage, persists data to SQLite/PostgreSQL, and integrates WhatsApp via Twilio or a headless web automation option.
@@ -14,7 +12,6 @@ Tech stack
 - Python 3.10+ (Typer/Click for CLI, FastAPI for API, SQLAlchemy for ORM).
 - SQLite (dev) / PostgreSQL (prod).
 - Twilio WhatsApp API for messaging; alternative pywhatkit for local automation.
-
 
  Table of contents
 - Getting started
@@ -32,7 +29,6 @@ Tech stack
 - Roadmap
 - Contributing
 - License
-
 
  Getting started
 This project follows common Python README best practices: clear setup, commands, and environment configuration. Ensure Python 3.10+ is installed.
@@ -62,8 +58,6 @@ Quick start
 Send a WhatsApp test message (Twilio sandbox):
 - python -m app.whatsapp send --to "whatsapp:+<E164_NUMBER>" --text "Hello from Expense Tracker!"
 
-
-
  Configuration
 Create a .env file with the following keys. Example values align with Twilio’s WhatsApp sandbox and standard DB settings.
 Required
@@ -81,8 +75,6 @@ Optional (automation alternative)
 - USE_PYWHATKIT=true
 - PYWHATKIT_HEADLESS=false
 
-
-
  CLI usage
 The CLI provides expense commands, summaries, and WhatsApp actions. It’s implemented with Typer/Click patterns consistent with Python CLI norms.
 Examples
@@ -96,7 +88,6 @@ Examples
   - python -m app.cli export --out expenses_oct.css
 - Send WhatsApp summary:
   - python -m app.whatsapp summary --period week
-
 
 REST API
 The API uses FastAPI. Provide X-API-KEY: <SECRET_TOKEN> in headers.
@@ -113,7 +104,6 @@ Run locally
 - uvicorn app.api:app --reload
 - Visit /docs for OpenAPI UI.
 
-
  WhatsApp setup
 Using Twilio (recommended)
 1. Create a Twilio account and enable the WhatsApp Sandbox.
@@ -129,14 +119,10 @@ Alternative: pywhatkit (local automation)
 - pip install pywhatkit
 - Requires active WhatsApp Web session in browser; useful for personal projects and demos.
 
-
-
  Scheduling
 Schedule daily/weekly summaries via cron or Windows Task Scheduler.
 - Example cron (7:30 PM daily):
   - 30 19 * * * cd /path/to/app && . .venv/bin/activate && python -m app.whatsapp summary --period day
-
-
 
 Data model
 Core tables
@@ -146,21 +132,15 @@ Core tables
 Summary logic
 - Period aggregation over date range: sum(amount), count, top categories.
 
-
-
  CSV import/export
 - Import: python -m app.cli import --file expenses.csv
   - Expects header: Date,Category,Description,Amount.
 - Export: python -m app.cli export --out out.csv
 
-
-
  Testing
 - Install dev deps: pip install -r requirements-dev.txt
 - Run tests: pytest -q
 - Lint: ruff check . && black --check .
-
-
 
  Docker
 Build
@@ -168,26 +148,16 @@ Build
 Run
 - docker run --env-file .env -p 8000:8000 expense-tracker-whatsapp uvicorn app.api:app --host 0.0.0.0 --port 8000
 
-
-
  Deployment
 - Set DATABASE_URL to managed Postgres in production.
 - Store secrets as environment variables, not in code.
 - For Twilio production WhatsApp, register a WhatsApp Business account and templates.
-
-
 
  Roadmap
 - Budgets and alerts when exceeding category/month limits.
 - Media receipts via WhatsApp, OCR extraction.
 - Multi-user with OAuth and per-user WhatsApp routing.
 - Web dashboard with charts.
-
-
-
-
-
-
 
  References
 - Python README best practices and structure.
