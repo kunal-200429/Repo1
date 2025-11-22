@@ -1,0 +1,110 @@
+Date: 9/11/2025
+Time: 23:43
+Phone Number: +918625842040
+Message: New expense: 5.0 for groceries -
+--------------------
+Date: 9/11/2025
+Time: 23:46
+Phone Number: +918625842040
+Message: New expense: 8.0 for bisleri -
+--------------------
+Date: 9/11/2025
+Time: 23:55
+Phone Number: +918625842040
+Message: New expense: 2500.0 for redlabel -
+--------------------
+Date: 9/11/2025
+Time: 23:55
+Phone Number: +918625842040
+Message: New expense: 2500.0 for redlabel -
+--------------------
+Date: 10/11/2025
+Time: 0:26
+Phone Number: +1234567890
+Message: New expense: 50.0 for food - Lunch
+--------------------
+Date: 10/11/2025
+Time: 0:26
+Phone Number: +918625842040
+Message: New expense: 50.0 for food - Lunch
+--------------------
+Date: 10/11/2025
+Time: 0:36
+Phone Number: +1234567890
+Message: New expense: 50.0 for food - Lunch
+--------------------
+Date: 10/11/2025
+Time: 0:49
+Phone Number: +918625842040
+Message: New expense: 50.0 for pen - Lunch
+--------------------
+Date: 10/11/2025
+Time: 14:44
+Phone Number: +918625842040
+Message: New expense: 10.5 for kunal - Lunch
+--------------------
+Date: 10/11/2025
+Time: 15:20
+Phone Number: +918625842040
+Message: New expense: 40.0 for chips - Snacks
+--------------------
+Date: 16/11/2025
+Time: 0:6
+Phone Number: +918625842040
+Message: New expense: $21.00 for groceries - coke
+--------------------
+Date: 20/11/2025
+Time: 11:44
+Phone Number: +918625842040
+Message: New expense: ₹4000.00 for utilities - Jameson
+--------------------
+Date: 20/11/2025
+Time: 11:45
+Phone Number: +918625842040
+Message: New expense: ₹4000.00 for utilities - Jameson
+--------------------
+Date: 20/11/2025
+Time: 11:45
+Phone Number: +918625842040
+Message: New expense: ₹4000.00 for utilities - Jameson
+--------------------
+Date: 20/11/2025
+Time: 11:45
+Phone Number: +918625842040
+Message: New expense: ₹4000.00 for utilities - Jameson
+--------------------
+Date: 20/11/2025
+Time: 11:45
+Phone Number: +918625842040
+Message: New expense: ₹4000.00 for utilities - Jameson
+--------------------
+Date: 20/11/2025
+Time: 11:45
+Phone Number: +918625842040
+Message: New expense: ₹4000.00 for utilities - Jameson
+--------------------
+Date: 20/11/2025
+Time: 11:55
+Phone Number: +918625842040
+Message: New expense: ₹300.00 for groceries - chinese
+--------------------
+Date: 20/11/2025
+Time: 11:55
+Phone Number: +918625842040
+Message: New expense: ₹300.00 for groceries - chinese
+--------------------
+Date: 20/11/2025
+Time: 11:55
+Phone Number: +918625842040
+Message: New expense: ₹300.00 for groceries - chinese
+--------------------
+Date: 20/11/2025
+Time: 11:56
+Phone Number: +918625842040
+Message: New expense: ₹300.00 for groceries - chinese
+--------------------
+Date: 20/11/2025
+Time: 11:57
+Phone Number: +918625842040
+Message: New expense: ₹2.00 for groceries - chocolate
+--------------------

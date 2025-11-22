@@ -1,169 +1,158 @@
- Expense Tracker with WhatsApp
+# Expense Tracker with WhatsApp Notifications & Web Interface
 
-Track daily expenses, categories, and budgets with a simple Python service that can send WhatsApp notifications and summaries to your phone. This project supports CLI and REST usage, persists data to SQLite/PostgreSQL, and integrates WhatsApp via Twilio or a headless web automation option.
- Features
-- Add, list, filter, and export expenses with categories, notes, and dates.
-- Daily/weekly/monthly summaries with totals and category breakdowns.
-- WhatsApp notifications for new expenses and scheduled summaries.
-- CSV import/export and simple SQLite by default; PostgreSQL optional.
-- CLI commands and REST API with token auth.
+A comprehensive Python application to track daily expenses with categories, CLI interface, REST API, web dashboard, and WhatsApp notifications. All amounts displayed in Indian Rupees (₹).
 
-Tech stack
-- Python 3.10+ (Typer/Click for CLI, FastAPI for API, SQLAlchemy for ORM).
-- SQLite (dev) / PostgreSQL (prod).
-- Twilio WhatsApp API for messaging; alternative pywhatkit for local automation.
+## Features
 
- Table of contents
-- Getting started
-- Quick start
-- Configuration
-- CLI usage
-- REST API
-- WhatsApp setup
-- Scheduling
-- Data model
-- CSV import/export
-- Testing
-- Docker
-- Deployment
-- Roadmap
-- Contributing
-- License
+- **Web Dashboard** - Visual interface accessible via browser at http://127.0.0.1:5000/
+- Add, list, filter, delete, and export expenses
+- Categories management (add/list categories)
+- Daily/weekly/monthly summaries with category breakdowns
+- CSV export for spreadsheet analysis
+- CLI commands using Typer
+- REST API using Flask
+- WhatsApp notifications via pywhatkit
+- Responsive web design (works on mobile/desktop)
+- SQLite database with automatic table creation
 
- Getting started
-This project follows common Python README best practices: clear setup, commands, and environment configuration. Ensure Python 3.10+ is installed.
+## Installation
 
-Prerequisites
-- Python 3.10+ and pip.
-- Twilio account (for WhatsApp API) or local browser automation alternative.
-- Git.
+1. Install dependencies:
+   ```
+   pip install -r requirements.txt
+   ```
 
-Clone and setup
-- git clone <your-repo-url>
-- cd expense-tracker-whatsapp
-- python -m venv .venv && source .venv/bin/activate  # Windows: .venv\Scripts\activate
-- pip install -r requirements.txt
+## Usage
 
-Quick start
-- Copy .env.example to .env and fill values (see Configuration).
-- Initialize database:
-  - python -m app.db init
-  - python -m app.db migrate
-  - python -m app.db upgrade
-- Run CLI help:
-  - python -m app.cli --help
-- Start API:
-  - uvicorn app.api:app --reload
+### Web Interface (Recommended)
 
-Send a WhatsApp test message (Twilio sandbox):
-- python -m app.whatsapp send --to "whatsapp:+<E164_NUMBER>" --text "Hello from Expense Tracker!"
+Start the web server with full interface:
+```
+python main.py web
+```
 
- Configuration
-Create a .env file with the following keys. Example values align with Twilio’s WhatsApp sandbox and standard DB settings.
-Required
-- DATABASE_URL=sqlite:///./expense.db
-- SECRET_TOKEN=change-me
-- TZ=Asia/Kolkata
+Open your browser to `http://127.0.0.1:5000/` for:
+- Dashboard with expense overview and recent transactions
+- Add expenses with optional WhatsApp notifications
+- View and filter all expenses
+- Generate summaries and reports
+- Export data to CSV
 
-WhatsApp via Twilio
-- TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-- TWILIO_AUTH_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-- TWILIO_WHATSAPP_FROM=whatsapp:+14155238886
-- WHATSAPP_TO=whatsapp:+91XXXXXXXXXX
+### CLI
 
-Optional (automation alternative)
-- USE_PYWHATKIT=true
-- PYWHATKIT_HEADLESS=false
+Run CLI commands:
+```
+python main.py cli
+```
 
- CLI usage
-The CLI provides expense commands, summaries, and WhatsApp actions. It’s implemented with Typer/Click patterns consistent with Python CLI norms.
-Examples
-- Add an expense:
-  - python -m app.cli add --amount 299.00 --category "Food" --note "Dinner" --date 2025-10-18
-- List expenses:
-  - python -m app.cli list --from 2025-10-01 --to 2025-10-31 --category Food
-- Monthly summary:
-  - python -m app.cli summary --period month
-- Export to CSV:
-  - python -m app.cli export --out expenses_oct.css
-- Send WhatsApp summary:
-  - python -m app.whatsapp summary --period week
+Available commands:
+- `add <amount> <category> [description] [--notify phone]` - Add new expense
+- `list [--category CATEGORY] [--date DATE]` - List/filter expenses
+- `summary [daily|weekly|monthly]` - View expense summaries
+- `export [filename]` - Export expenses to CSV
+- `add-category <name>` - Add new category
+- `list-categories` - List all categories
+- `delete <id>` - Delete expense by ID
 
-REST API
-The API uses FastAPI. Provide X-API-KEY: <SECRET_TOKEN> in headers.
+Examples:
+```bash
+# Add expense with WhatsApp notification
+python cli.py add 25.99 entertainment "Movie tickets" --notify +1234567890
 
-Endpoints
-- GET /health → {status:"ok"}
-- GET /expenses?from=&to=&category=
-- POST /expenses {amount, category, note, date}
-- GET /summary?period=day|week|month
-- POST /notify/expense {id}
-- POST /notify/summary {period}
+# List food expenses
+python cli.py list --category food
 
-Run locally
-- uvicorn app.api:app --reload
-- Visit /docs for OpenAPI UI.
+# Get weekly summary
+python cli.py summary weekly
 
- WhatsApp setup
-Using Twilio (recommended)
-1. Create a Twilio account and enable the WhatsApp Sandbox.
-2. Join the sandbox by sending the provided keyword to the sandbox number.
-3. Set environment variables for Account SID, Auth Token, from number, and to number with whatsapp: prefix in E.164 format.
-4. Test message using python -m app.whatsapp send.
+# Export to custom file
+python cli.py export my_expenses.csv
+```
 
-Notes
-- Use parameter from_ in Python clients to avoid Python keyword conflict.
-- Content templates and media messages are supported; see Twilio docs for media.
+### REST API
 
-Alternative: pywhatkit (local automation)
-- pip install pywhatkit
-- Requires active WhatsApp Web session in browser; useful for personal projects and demos.
+The API is available when running the web server at `http://127.0.0.1:5000/api/`
 
- Scheduling
-Schedule daily/weekly summaries via cron or Windows Task Scheduler.
-- Example cron (7:30 PM daily):
-  - 30 19 * * * cd /path/to/app && . .venv/bin/activate && python -m app.whatsapp summary --period day
+API endpoints:
+- `GET /api/expenses` - List expenses (query params: category, date)
+- `POST /api/expenses` - Add expense (JSON body: amount, category, description, date)
+- `DELETE /api/expenses/<id>` - Delete expense by ID
 
-Data model
-Core tables
-- expenses: id, amount, category, note, date, created_at.
-- categories: id, name, budget_monthly (optional).
+API examples:
+```bash
+# List all expenses
+curl http://127.0.0.1:5000/api/expenses
 
-Summary logic
-- Period aggregation over date range: sum(amount), count, top categories.
+# Add expense
+curl -X POST http://127.0.0.1:5000/api/expenses \
+  -H "Content-Type: application/json" \
+  -d '{"amount": 15.50, "category": "food", "description": "Coffee"}'
 
- CSV import/export
-- Import: python -m app.cli import --file expenses.csv
-  - Expects header: Date,Category,Description,Amount.
-- Export: python -m app.cli export --out out.csv
+# Filter by category
+curl "http://127.0.0.1:5000/api/expenses?category=food"
+```
 
- Testing
-- Install dev deps: pip install -r requirements-dev.txt
-- Run tests: pytest -q
-- Lint: ruff check . && black --check .
+## WhatsApp Notifications
 
- Docker
-Build
-- docker build -t expense-tracker-whatsapp .
-Run
-- docker run --env-file .env -p 8000:8000 expense-tracker-whatsapp uvicorn app.api:app --host 0.0.0.0 --port 8000
+To enable WhatsApp notifications:
 
- Deployment
-- Set DATABASE_URL to managed Postgres in production.
-- Store secrets as environment variables, not in code.
-- For Twilio production WhatsApp, register a WhatsApp Business account and templates.
+1. **Install WhatsApp Desktop** on your computer (download from whatsapp.com/download)
+2. **Log into WhatsApp Web** in your browser:
+   - Go to https://web.whatsapp.com
+   - Scan the QR code with WhatsApp on your phone
+3. **Keep WhatsApp Web open** in your browser during use
+4. When adding expenses, provide phone number in international format (e.g., +1234567890)
 
- Roadmap
-- Budgets and alerts when exceeding category/month limits.
-- Media receipts via WhatsApp, OCR extraction.
-- Multi-user with OAuth and per-user WhatsApp routing.
-- Web dashboard with charts.
+**Important Notes:**
+- pywhatkit requires WhatsApp Web to be running and logged in
+- First message may take longer as it opens WhatsApp Web
+- Phone number must include country code (e.g., +1 for US, +91 for India)
+- If notifications fail, check that WhatsApp Web is logged in and accessible
 
- References
-- Python README best practices and structure.
-- General README template ideas.
-- Twilio WhatsApp quickstart and media messaging.
-- WhatsApp message sending tips in Python (from_ param).
-- pywhatkit automation for WhatsApp.
-- CSV-based expense tracker walkthrough for ideas.
+**Troubleshooting:**
+- Make sure WhatsApp Web is open in your browser
+- Ensure your phone number is in the correct international format
+- Check browser console for any JavaScript errors
+- Try refreshing WhatsApp Web if messages aren't sending
 
+## Database
+
+Uses SQLite (`expenses.db`) created automatically. Tables:
+- `expenses`: id, amount, category, description, date
+- `categories`: id, name
+
+## Project Structure
+
+```
+expense_tracker/
+├── main.py              # Entry point (CLI/Web selection)
+├── cli.py               # CLI interface using Typer
+├── api.py               # Flask web app with API and web routes
+├── database.py          # SQLite database operations
+├── models.py            # Data models (Expense, Category)
+├── utils.py             # Helper functions (export, summaries)
+├── whatsapp.py          # WhatsApp notification functions
+├── requirements.txt     # Python dependencies
+├── templates/           # HTML templates for web interface
+│   ├── base.html        # Base template with navigation
+│   ├── index.html       # Dashboard page
+│   ├── add_expense.html # Add expense form
+│   ├── expenses.html    # List/filter expenses
+│   ├── summary.html     # Summary reports
+│   └── export.html      # Export functionality
+├── expenses.db          # SQLite database (auto-created)
+├── expenses.csv         # Export file
+└── PyWhatKit_DB.txt     # WhatsApp session data
+```
+
+## Future Enhancements
+
+- User authentication and multi-user support
+- Budget setting and spending alerts
+- Recurring expenses
+- Receipt photo uploads
+- Advanced analytics and charts
+- Mobile app companion
+- Cloud backup and sync
+- Email notifications alternative
+- Multi-currency support
