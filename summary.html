@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h4><i class="fas fa-chart-bar"></i> Expense Summary</h4>
+    </div>
+    <div class="card-body">
+        <!-- Period Selector -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <label for="periodSelect" class="form-label">Select Period</label>
+                <select class="form-select" id="periodSelect" onchange="changePeriod()">
+                    <option value="daily" {% if period == 'daily' %}selected{% endif %}>Daily</option>
+                    <option value="weekly" {% if period == 'weekly' %}selected{% endif %}>Weekly</option>
+                    <option value="monthly" {% if period == 'monthly' %}selected{% endif %}>Monthly</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card bg-primary text-white">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Total Expenses</h5>
+                        <h2 class="display-4">₹{{ "%.2f"|format(summary.total) }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card bg-success text-white">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Number of Expenses</h5>
+                        <h2 class="display-4">{{ summary.expenses|length }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Breakdown -->
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Category Breakdown</h5>
+                <canvas id="categoryChart" width="400" height="300"></canvas>
+            </div>
+            <div class="col-md-6">
+                <h5>Category Details</h5>
+                <div class="list-group">
+                    {% for category, amount in summary.by_category.items() %}
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ category }}
+                        <span class="badge bg-primary rounded-pill">₹{{ "%.2f"|format(amount) }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Expenses -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <h5>Expenses in this period</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th class="text-end">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for expense in summary.expenses %}
+                            <tr>
+                                <td>{{ expense.date }}</td>
+                                <td>{{ expense.description or 'No description' }}</td>
+                                <td><span class="badge bg-secondary">{{ expense.category }}</span></td>
+                                <td class="text-end">₹{{ "%.2f"|format(expense.amount) }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function changePeriod() {
+    const period = document.getElementById('periodSelect').value;
+    window.location.href = '/summary?period=' + period;
+}
+
+// Category Chart
+const ctx = document.getElementById('categoryChart');
+if (ctx) {
+    const categoryData = {{ summary.by_category|tojson }};
+    const labels = Object.keys(categoryData);
+    const data = Object.values(categoryData);
+
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: [
+                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#FF6384', '#C9CBCF'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                }
+            }
+        }
+    });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Export - Expense Tracker{% endblock %}
+
+{% block content %}
+<h1>Export Expenses</h1>
+
+<p>Export your expenses to a CSV file for analysis in Excel or other spreadsheet applications.</p>
+
+<form method="POST" action="/export">
+    <div class="form-group">
+        <label for="filename">Filename</label>
+        <input type="text" id="filename" name="filename" value="expenses.csv" required>
+        <small>The file will be saved in the project directory.</small>
+    </div>
+
+    <button type="submit" class="btn">Export to CSV</button>
+</form>
+
+{% if export_success %}
+<div class="alert alert-success">
+    Expenses exported successfully to {{ export_filename }}!
+</div>
+{% endif %}
+
+<div style="margin-top: 20px;">
+    <a href="/" class="btn">Back to Dashboard</a>
+</div>
+{% endblock %}

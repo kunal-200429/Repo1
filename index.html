@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="text-white mb-4"><i class="fas fa-tachometer-alt"></i> Dashboard</h1>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-calendar-day fa-3x text-primary mb-3"></i>
+                <h5 class="card-title">Today's Expenses</h5>
+                <p class="card-text display-4">{{ summary.total|round(2) }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-tags fa-3x text-success mb-3"></i>
+                <h5 class="card-title">Categories</h5>
+                <p class="card-text display-4">{{ categories|length }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-receipt fa-3x text-warning mb-3"></i>
+                <h5 class="card-title">Total Expenses</h5>
+                <p class="card-text display-4">{{ total_expenses|length }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-clock"></i> Recent Expenses</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_expenses %}
+                <ul class="list-group list-group-flush">
+                    {% for expense in recent_expenses[:5] %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ expense.description or 'No description' }}
+                        <span class="badge bg-primary rounded-pill">₹{{ expense.amount }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="text-muted">No expenses yet. <a href="/add">Add your first expense!</a></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-chart-pie"></i> Category Breakdown</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="categoryChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-bolt"></i> Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                    <a href="/add" class="btn btn-primary me-md-2"><i class="fas fa-plus"></i> Add Expense</a>
+                    <a href="/expenses" class="btn btn-outline-primary me-md-2"><i class="fas fa-list"></i> View All</a>
+                    <a href="/summary" class="btn btn-outline-success me-md-2"><i class="fas fa-chart-bar"></i> Summary</a>
+                    <a href="/export" class="btn btn-outline-warning"><i class="fas fa-download"></i> Export</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const ctx = document.getElementById('categoryChart').getContext('2d');
+    const categoryData = {{ summary.by_category|tojson }};
+    const labels = Object.keys(categoryData);
+    const data = Object.values(categoryData);
+
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: [
+                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'
+                ],
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

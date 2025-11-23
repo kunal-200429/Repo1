@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Expenses - Expense Tracker{% endblock %}
+
+{% block content %}
+<h1>All Expenses</h1>
+
+<form method="GET" action="/expenses" style="margin-bottom: 20px;">
+    <div style="display: flex; gap: 10px; align-items: end; flex-wrap: wrap;">
+        <div class="form-group" style="margin: 0;">
+            <label for="category_filter">Filter by Category</label>
+            <select id="category_filter" name="category">
+                <option value="">All Categories</option>
+                {% for cat in categories %}
+                <option value="{{ cat.name }}" {% if request.args.get('category') == cat.name %}selected{% endif %}>{{ cat.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group" style="margin: 0;">
+            <label for="date_filter">Filter by Date</label>
+            <input type="date" id="date_filter" name="date" value="{{ request.args.get('date', '') }}">
+        </div>
+
+        <button type="submit" class="btn">Filter</button>
+        <a href="/expenses" class="btn">Clear Filters</a>
+    </div>
+</form>
+
+{% if expenses %}
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Amount</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for expense in expenses %}
+        <tr>
+            <td>{{ expense.id }}</td>
+            <td>₹{{ "%.2f"|format(expense.amount) }}</td>
+            <td>{{ expense.category }}</td>
+            <td>{{ expense.description or '-' }}</td>
+            <td>{{ expense.date }}</td>
+            <td>
+                <form method="POST" action="/expenses/{{ expense.id }}/delete" style="display: inline;">
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Delete this expense?')">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No expenses found. <a href="/add">Add your first expense</a>!</p>
+{% endif %}
+
+<div style="margin-top: 20px;">
+    <a href="/add" class="btn">Add New Expense</a>
+    <a href="/export" class="btn">Export to CSV</a>
+</div>
+{% endblock %}
